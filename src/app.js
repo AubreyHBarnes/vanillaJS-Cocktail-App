@@ -1,5 +1,4 @@
-fetch(`/.netlify/functions/fetch-cocktail`)
+fetch(`/.netlify/functions/fetch-recent`)
     .then(res => {
         console.log(res.json())
     })
-// console.log('yeet');
