@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "concurrently": "^6.0.0",
+    "http-server": "^0.12.3",
+    "netlify-cli": "^3.8.6"
+  },
+  "scripts": {
+    "dev": "http-server src -p 8080",
+    "netlify": "./node_modules/.bin/netlify"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
