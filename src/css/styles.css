@@ -2,6 +2,13 @@
   transition: opacity 0.25s ease;
 }
 body.modal-active {
-  overflow-x: hidden;
-  overflow-y: visible !important;
+  /* overflow-x: hidden;
+  overflow-y: visible;
+
+  position: fixed;
+  width: 100%;
+  height: 100%; */
+
+  height: 100vh;
+  overflow-y: hidden;
 }
