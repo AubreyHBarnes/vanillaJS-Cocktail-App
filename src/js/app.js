@@ -47,8 +47,6 @@ let attachDetailsEvent = async () => {
             let res = await fetch(`/.netlify/functions/fetchDetails?idQuery=${selectedDrink}`)
             let data = await res.json();
 
-            // event.preventDefault()
-
             passTheDetails = data.drinks[0]
             populateDetails(passTheDetails)
 
@@ -87,7 +85,7 @@ function toggleModal() {
 }
 
 let populateDetails = async (passTheDetails) => {
-    console.log(passTheDetails)
+    console.log(Object.entries(passTheDetails))
 
     var modalTitle = document.querySelector('#modal-title')
     modalTitle.textContent = `${passTheDetails.strDrink}`

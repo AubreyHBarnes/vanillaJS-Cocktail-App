@@ -16,6 +16,20 @@ body.modal-active {
 
 body.modal-active .modal-container {
   position: absolute;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   max-height: 90vh;
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body.modal-active .modal-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+/* .example {
+  
+} */
