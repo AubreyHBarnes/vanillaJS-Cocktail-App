@@ -1,5 +1,7 @@
 let currentPage = window.location.pathname;
 
+let searchCocktail = document.getElementsByTagName('form');
+
 let loadrecentdrinks = document.querySelector('#card-container');
 
 let buildDrinkCard = async (drink) => {
@@ -27,6 +29,36 @@ let buildDrinkCard = async (drink) => {
 
     loadrecentdrinks.appendChild(article)
 
+    article.addEventListener('click', async (event) => {
+        let selectedDrink = event.currentTarget.id
+
+        let res = await fetch(`/.netlify/functions/fetchDetails?idQuery=${selectedDrink}`)
+        let data = await res.json();
+
+        passTheDetails = data.drinks[0]
+        populateDetails(passTheDetails)
+
+    })
+
+}
+
+
+
+let populateSearchName = async (searchTerm) => {
+    res = await fetch(`/.netlify/functions/searchCocktailName?nameQuery=${searchTerm}`)
+    const data = await res.json();
+
+    if (data.drinks !== null) {
+        data.drinks.forEach(drink => {
+            buildDrinkCard(drink)
+            console.log(drink)
+        })
+    }
+    
+
+    
+
+    return data;
 }
 
 let populateRecent = async () => { //async?
@@ -40,32 +72,54 @@ let populateRecent = async () => { //async?
 
 }
 
-let attachDetailsEvent = async () => {
-    if (currentPage.includes('recent')) {
-        await populateRecent(); //receives drinks array, after populateRecent runs
-    } else if (currentPage.includes('random')) {
-        await populateRandom();
-    } else if (currentPage.includes('popular')) {
-        await populatePopular();
-    }
-
-
-    let detailEvent = loadrecentdrinks.querySelectorAll('.drinkDetails');
-
-    detailEvent.forEach(drink => {
-        drink.addEventListener('click', async (event) => {
-            let selectedDrink = event.currentTarget.id
-
-            let res = await fetch(`/.netlify/functions/fetchDetails?idQuery=${selectedDrink}`)
-            let data = await res.json();
-
-            passTheDetails = data.drinks[0]
-            populateDetails(passTheDetails)
-
-        })
+let populateRandom = async () => {
+    res = await fetch(`/.netlify/functions/fetchRandom`);
+    const data = await res.json();
+    data.drinks.forEach(drink => {
+        buildDrinkCard(drink)
     })
 
+    return data;
 }
+
+let populatePopular = async () => {
+    res = await fetch(`/.netlify/functions/fetch-popular`);
+    const data = await res.json();
+    data.drinks.forEach(drink => {
+        buildDrinkCard(drink)
+    })
+
+    return data;
+}
+
+// let attachDetailsEvent = async () => {
+//     // if (currentPage.includes('recent')) {
+//     //     await populateRecent(); //receives drinks array, after populateRecent runs
+//     // } else if (currentPage.includes('random')) {
+//     //     await populateRandom();
+//     // } else if (currentPage.includes('popular')) {
+//     //     await populatePopular();
+//     // } else if (currentPage === '/') {
+//     //     await populateSearchName();
+//     // }
+
+
+//     let detailEvent = loadrecentdrinks.querySelectorAll('.drinkDetails');
+
+//     detailEvent.forEach(drink => {
+//         drink.addEventListener('click', async (event) => {
+//             let selectedDrink = event.currentTarget.id
+
+//             let res = await fetch(`/.netlify/functions/fetchDetails?idQuery=${selectedDrink}`)
+//             let data = await res.json();
+
+//             passTheDetails = data.drinks[0]
+//             populateDetails(passTheDetails)
+
+//         })
+//     })
+
+// }
 
 const overlay = document.querySelector('.modal-overlay')
 overlay.addEventListener('click', toggleModal)
@@ -133,27 +187,25 @@ let populateDetails = async (passTheDetails) => {
     }
 
     toggleModal()
-
-
-
+    
 }
 
-let populateRandom = async () => {
-    res = await fetch(`/.netlify/functions/fetchRandom`);
-    const data = await res.json();
-    data.drinks.forEach(drink => {
-        buildDrinkCard(drink)
+// populateRandom();
+
+// attachDetailsEvent();
+if (currentPage.includes('recent')) {
+    populateRecent(); //receives drinks array, after populateRecent runs
+} else if (currentPage.includes('random')) {
+    populateRandom();
+} else if (currentPage.includes('popular')) {
+    populatePopular();
+} else if (currentPage === '/') {
+    searchCocktail[0].addEventListener('submit', (event) => {
+        event.preventDefault()
+        let searchTerm = populateSearchName(document.getElementById('userInput').value)
+        populateSearchName(searchTerm)
+        
+        
     })
+    // populateSearchName();
 }
-
-let populatePopular = async () => {
-    res = await fetch(`/.netlify/functions/fetch-popular`);
-    const data = await res.json();
-    data.drinks.forEach(drink => {
-        buildDrinkCard(drink)
-    })
-}
-
-populateRandom();
-
-attachDetailsEvent();
