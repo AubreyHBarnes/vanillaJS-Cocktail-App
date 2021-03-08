@@ -45,6 +45,8 @@ let attachDetailsEvent = async () => {
         await populateRecent(); //receives drinks array, after populateRecent runs
     } else if (currentPage.includes('random')) {
         await populateRandom();
+    } else if (currentPage.includes('popular')) {
+        await populatePopular();
     }
 
 
@@ -139,9 +141,14 @@ let populateRandom = async () => {
     data.drinks.forEach(drink => {
         buildDrinkCard(drink)
     })
+}
 
-    // return data;
-
+let populatePopular = async () => {
+    res = await fetch(`/.netlify/functions/fetch-popular`);
+    const data = await res.json();
+    data.drinks.forEach(drink => {
+        buildDrinkCard(drink)
+    })
 }
 
 populateRandom();
