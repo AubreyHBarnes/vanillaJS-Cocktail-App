@@ -45,6 +45,7 @@ let buildDrinkCard = async (drink) => {
 
 
 let populateSearchName = async (searchTerm) => {
+    loadrecentdrinks.textContent = ''
     res = await fetch(`/.netlify/functions/searchCocktailName?nameQuery=${searchTerm}`)
     const data = await res.json();
 
