@@ -56,25 +56,25 @@ let attachDetailsEvent = async () => {
 }
 
 const overlay = document.querySelector('.modal-overlay')
-    overlay.addEventListener('click', toggleModal)
+overlay.addEventListener('click', toggleModal)
 
-    var closemodal = document.querySelectorAll('.modal-close')
-    for (var i = 0; i < closemodal.length; i++) {
-        closemodal[i].addEventListener('click', toggleModal)
+var closemodal = document.querySelectorAll('.modal-close')
+for (var i = 0; i < closemodal.length; i++) {
+    closemodal[i].addEventListener('click', toggleModal)
+}
+
+document.onkeydown = function (evt) {
+    evt = evt || window.event
+    var isEscape = false
+    if ("key" in evt) {
+        isEscape = (evt.key === "Escape" || evt.key === "Esc")
+    } else {
+        isEscape = (evt.keyCode === 27)
     }
-
-    document.onkeydown = function (evt) {
-        evt = evt || window.event
-        var isEscape = false
-        if ("key" in evt) {
-            isEscape = (evt.key === "Escape" || evt.key === "Esc")
-        } else {
-            isEscape = (evt.keyCode === 27)
-        }
-        if (isEscape && document.body.classList.contains('modal-active')) {
-            toggleModal()
-        }
-    };
+    if (isEscape && document.body.classList.contains('modal-active')) {
+        toggleModal()
+    }
+};
 
 function toggleModal() {
     const body = document.querySelector('body')
@@ -85,7 +85,8 @@ function toggleModal() {
 }
 
 let populateDetails = async (passTheDetails) => {
-    console.log(Object.entries(passTheDetails))
+
+    var ingredients = document.querySelector('#ingredients-container')
 
     var modalTitle = document.querySelector('#modal-title')
     modalTitle.textContent = `${passTheDetails.strDrink}`
@@ -95,6 +96,27 @@ let populateDetails = async (passTheDetails) => {
 
     var modalDesc = document.querySelector('#modal-desc')
     modalDesc.textContent = `${passTheDetails.strInstructions}`
+
+    let ingredientName = [];
+    let ingredientQty = [];
+
+    for (var key in passTheDetails) {
+        
+        if (passTheDetails[key] !== null && passTheDetails[key] !== "" && key.includes('Ingredient')) {
+            ingredientName.push(passTheDetails[key]);
+        }
+
+        if (passTheDetails[key] !== null && passTheDetails[key] !== "" && key.includes('Measure')) {
+            ingredientQty.push(passTheDetails[key]);
+        }
+    }
+    for (let i = 0; i < ingredientName.length; i++) {
+        let button = document.createElement('button')
+        button.textContent = `${ingredientQty[i] + ' ' + ingredientName[i]}`
+        button.setAttribute('class', 'focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-md border border-blue-600 hover:bg-blue-50')
+    
+        ingredients.appendChild(button)
+    }
 
     toggleModal()
 
