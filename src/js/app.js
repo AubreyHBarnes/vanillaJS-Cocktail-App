@@ -99,6 +99,7 @@ function toggleModal() {
 let populateDetails = async (passTheDetails) => {
 
     var ingredients = document.querySelector('#ingredients-container')
+    ingredients.textContent = '';
 
     var modalTitle = document.querySelector('#modal-title')
     modalTitle.textContent = `${passTheDetails.strDrink}`
@@ -132,6 +133,8 @@ let populateDetails = async (passTheDetails) => {
     }
 
     toggleModal()
+
+
 
 }
 
