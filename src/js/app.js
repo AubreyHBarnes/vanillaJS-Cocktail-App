@@ -1,6 +1,7 @@
 let currentPage = window.location.pathname;
 
 let searchCocktail = document.getElementsByTagName('form');
+// console.log(searchCocktail[0])
 
 let loadrecentdrinks = document.querySelector('#card-container');
 
@@ -46,20 +47,35 @@ let buildDrinkCard = async (drink) => {
 
 let populateSearchName = async (searchTerm) => {
     loadrecentdrinks.textContent = ''
-    res = await fetch(`/.netlify/functions/searchCocktailName?nameQuery=${searchTerm}`)
-    const data = await res.json();
+    if (searchTerm && typeof searchTerm !== 'undefined' && searchTerm !== "" && searchTerm.trim().length !== 0) { //!/\s/.test(searchTerm) && searchTerm !== null
+        res = await fetch(`/.netlify/functions/searchCocktailName?nameQuery=${searchTerm}`)
+        const data = await res.json();
+        console.log(data)
 
-    if (data.drinks !== null) {
-        data.drinks.forEach(drink => {
-            buildDrinkCard(drink)
-            console.log(drink)
-        })
+        if (data.drinks == null) {
+            const p = document.createElement('p')
+            p.setAttribute('class', 'text-lg')
+            p.textContent = `Search results not found`
+
+            loadrecentdrinks.appendChild(p)
+        } else {
+            data.drinks.forEach(drink => {
+                buildDrinkCard(drink)
+            })
+        }
+
+        
+
+
+    } else {
+        const p = document.createElement('p')
+        p.setAttribute('class', 'text-lg')
+        p.textContent = `Search results not found`
+
+        loadrecentdrinks.appendChild(p)
     }
-    
 
-    
-
-    return data;
+    // return data;
 }
 
 let populateRecent = async () => { //async?
@@ -70,7 +86,6 @@ let populateRecent = async () => { //async?
     })
 
     return data;
-
 }
 
 let populateRandom = async () => {
@@ -92,35 +107,6 @@ let populatePopular = async () => {
 
     return data;
 }
-
-// let attachDetailsEvent = async () => {
-//     // if (currentPage.includes('recent')) {
-//     //     await populateRecent(); //receives drinks array, after populateRecent runs
-//     // } else if (currentPage.includes('random')) {
-//     //     await populateRandom();
-//     // } else if (currentPage.includes('popular')) {
-//     //     await populatePopular();
-//     // } else if (currentPage === '/') {
-//     //     await populateSearchName();
-//     // }
-
-
-//     let detailEvent = loadrecentdrinks.querySelectorAll('.drinkDetails');
-
-//     detailEvent.forEach(drink => {
-//         drink.addEventListener('click', async (event) => {
-//             let selectedDrink = event.currentTarget.id
-
-//             let res = await fetch(`/.netlify/functions/fetchDetails?idQuery=${selectedDrink}`)
-//             let data = await res.json();
-
-//             passTheDetails = data.drinks[0]
-//             populateDetails(passTheDetails)
-
-//         })
-//     })
-
-// }
 
 const overlay = document.querySelector('.modal-overlay')
 overlay.addEventListener('click', toggleModal)
@@ -188,12 +174,9 @@ let populateDetails = async (passTheDetails) => {
     }
 
     toggleModal()
-    
+
 }
 
-// populateRandom();
-
-// attachDetailsEvent();
 if (currentPage.includes('recent')) {
     populateRecent(); //receives drinks array, after populateRecent runs
 } else if (currentPage.includes('random')) {
@@ -201,12 +184,18 @@ if (currentPage.includes('recent')) {
 } else if (currentPage.includes('popular')) {
     populatePopular();
 } else if (currentPage === '/') {
-    searchCocktail[0].addEventListener('submit', (event) => {
-        event.preventDefault()
-        let searchTerm = populateSearchName(document.getElementById('userInput').value)
+    // searchCocktail[0].addEventListener('submit', (event) => {
+    //     event.preventDefault()
+    //     let searchTerm = populateSearchName(document.getElementById('userInput').value)
+    //     populateSearchName(searchTerm)
+
+
+    // })
+    searchCocktail[0].onsubmit = function (event) {
+        let searchTerm = document.getElementById('userInput').value
         populateSearchName(searchTerm)
-        
-        
-    })
-    // populateSearchName();
+
+        return false
+    }
+
 }
