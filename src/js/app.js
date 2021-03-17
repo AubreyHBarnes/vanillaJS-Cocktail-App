@@ -1,7 +1,6 @@
 let currentPage = window.location.pathname;
 
 let searchCocktail = document.getElementsByTagName('form');
-// console.log(searchCocktail[0])
 
 let loadrecentdrinks = document.querySelector('#card-container');
 
@@ -50,7 +49,7 @@ let populateSearchName = async (searchTerm) => {
     if (searchTerm && typeof searchTerm !== 'undefined' && searchTerm !== "" && searchTerm.trim().length !== 0) { //!/\s/.test(searchTerm) && searchTerm !== null
         res = await fetch(`/.netlify/functions/searchCocktailName?nameQuery=${searchTerm}`)
         const data = await res.json();
-        console.log(data)
+        // console.log(data)
 
         if (data.drinks == null) {
             const p = document.createElement('p')
@@ -139,6 +138,8 @@ function toggleModal() {
 
 let populateDetails = async (passTheDetails) => {
 
+    // console.log(passTheDetails)
+
     var ingredients = document.querySelector('#ingredients-container')
     ingredients.textContent = '';
 
@@ -157,12 +158,20 @@ let populateDetails = async (passTheDetails) => {
 
     for (var key in passTheDetails) {
 
-        if (passTheDetails[key] !== null && passTheDetails[key] !== "" && key.includes('Ingredient')) {
+        // console.log(!passTheDetails[key])
+
+        if ( passTheDetails[key] && passTheDetails[key] !== "" && key.includes('Ingredient')) { 
             ingredientName.push(passTheDetails[key]);
+            // console.log(key + ' ' + passTheDetails[key])
         }
 
-        if (passTheDetails[key] !== null && passTheDetails[key] !== "" && key.includes('Measure')) {
+        if (passTheDetails[key] && passTheDetails[key] !== "" && key.includes('Measure')) {
+            // console.log(passTheDetails[key])
             ingredientQty.push(passTheDetails[key]);
+
+        } else if (key.includes('Measure') && passTheDetails[key] === null) {
+            // console.log('else stmt')
+            ingredientQty.push('');
         }
     }
     for (let i = 0; i < ingredientName.length; i++) {
